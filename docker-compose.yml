@@ -1,0 +1,8 @@
+services:
+  restaurantes-svc:
+    build: .
+    image: duoc/jv0101-foodgo-restaurantes:1.0.0
+    container_name: foodgo-restaurantes-svc
+    ports:
+      - "${PORT:-8082}:8082"
+    restart: unless-stopped
