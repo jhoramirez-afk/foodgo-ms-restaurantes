@@ -1,5 +1,6 @@
 package cl.duoc.jv0101.foodgo.restaurantes.controller;
 
+import cl.duoc.jv0101.foodgo.restaurantes.exception.ResourceNotFoundException;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -33,7 +34,7 @@ public class RestauranteController {
     @GetMapping("/{id}")
     public ResponseEntity<Restaurante> obtener(@PathVariable Long id) {
         return service.findById(id).map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResourceNotFoundException("Restaurante no encontrado con id " + id));
     }
 
     @PostMapping
@@ -45,12 +46,14 @@ public class RestauranteController {
     public ResponseEntity<Restaurante> actualizar(@PathVariable Long id,
             @Valid @RequestBody Restaurante datos) {
         return service.update(id, datos).map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResourceNotFoundException("Restaurante no encontrado con id " + id));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        return service.delete(id) ? ResponseEntity.noContent().build()
-                : ResponseEntity.notFound().build();
+        if (!service.delete(id)) {
+            throw new ResourceNotFoundException("Restaurante no encontrado con id " + id);
+        }
+        return ResponseEntity.noContent().build();
     }
 }
