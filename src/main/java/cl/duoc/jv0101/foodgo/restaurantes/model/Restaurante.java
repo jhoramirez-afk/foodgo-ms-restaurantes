@@ -1,5 +1,11 @@
 package cl.duoc.jv0101.foodgo.restaurantes.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.OneToMany;
+import jakarta.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,6 +32,11 @@ public class Restaurante {
     @Column
     private String direccion;
 
+    @Valid
+    @OneToMany(mappedBy = "restaurante", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference("restaurante-menu-items")
+    private List<ItemMenu> menuitems = new ArrayList<>();
+
     public Long getId() { return id; }
 
     public void setId(Long id) { this.id = id; }
@@ -42,4 +53,24 @@ public class Restaurante {
 
     public void setDireccion(String direccion) { this.direccion = direccion; }
 
+    public List<ItemMenu> getMenuitems() {
+        return menuitems;
+    }
+
+    public void setMenuitems(List<ItemMenu> items) {
+        this.menuitems.clear();
+        if (items != null) {
+            items.forEach(this::addItemMenu);
+        }
+    }
+
+    public void addItemMenu(ItemMenu item) {
+        menuitems.add(item);
+        item.setRestaurante(this);
+    }
+
+    public void removeItemMenu(ItemMenu item) {
+        menuitems.remove(item);
+        item.setRestaurante(null);
+    }
 }
