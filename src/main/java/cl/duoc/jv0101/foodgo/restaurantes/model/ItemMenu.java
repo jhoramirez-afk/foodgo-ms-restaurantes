@@ -1,5 +1,11 @@
 package cl.duoc.jv0101.foodgo.restaurantes.model;
 
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,8 +16,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 
 @Entity
@@ -22,18 +26,23 @@ public class ItemMenu {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Nombre es obligatorio")
+    @NotBlank(message = "Nombre del producto es obligatorio")
+    @Size(max = 255, message = "El campo admite hasta 255 caracteres")
     @Column(nullable = false)
     private String nombre;
 
+    @Size(max = 255, message = "El campo admite hasta 255 caracteres")
     @Column
     private String descripcion;
 
-    @DecimalMin(value = "0.0", inclusive = true, message = "El valor no puede ser negativo")
-    @Column
+    @NotNull(message = "Precio es obligatorio")
+    @DecimalMin(value = "1", message = "Precio debe ser mayor que cero")
+    @Digits(integer = 9, fraction = 0, message = "El importe debe expresarse en pesos CLP enteros, hasta 9 dígitos")
+    @Column(precision = 9, scale = 0)
     private BigDecimal precio;
 
-    @Column
+    @NotNull(message = "Disponible es obligatorio")
+    @Column(nullable = false)
     private Boolean disponible;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

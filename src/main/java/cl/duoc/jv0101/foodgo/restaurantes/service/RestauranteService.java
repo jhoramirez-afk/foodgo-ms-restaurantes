@@ -29,6 +29,7 @@ public class RestauranteService {
 
     public Restaurante create(Restaurante recurso) {
         recurso.setId(null);
+        recurso.getMenuitems().forEach(item -> item.setId(null));
         return repository.save(recurso);
     }
 

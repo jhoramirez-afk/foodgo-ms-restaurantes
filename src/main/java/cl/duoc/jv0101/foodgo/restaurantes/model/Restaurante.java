@@ -1,5 +1,8 @@
 package cl.duoc.jv0101.foodgo.restaurantes.model;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.OneToMany;
@@ -12,7 +15,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 
 
@@ -24,12 +26,17 @@ public class Restaurante {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "El nombre es obligatorio")
+    @NotBlank(message = "Nombre es obligatorio")
+    @Size(max = 255, message = "El campo admite hasta 255 caracteres")
     @Column(nullable = false)
     private String nombre;
-    @Column
+    @NotBlank(message = "Categoría es obligatorio")
+    @Size(max = 255, message = "El campo admite hasta 255 caracteres")
+    @Column(nullable = false)
     private String categoria;
-    @Column
+    @NotBlank(message = "Dirección es obligatorio")
+    @Size(max = 255, message = "El campo admite hasta 255 caracteres")
+    @Column(nullable = false)
     private String direccion;
 
     @Valid

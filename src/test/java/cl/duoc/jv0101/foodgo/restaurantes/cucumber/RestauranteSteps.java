@@ -33,10 +33,10 @@ public class RestauranteSteps {
         return "http://localhost:" + port + "/api/restaurantes";
     }
 
-    private HttpEntity<Map<String, String>> body(String valor) {
+    private HttpEntity<Map<String, Object>> body(String valor) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        return new HttpEntity<>(Map.of("nombre", valor), headers);
+        return new HttpEntity<>(Map.of("nombre", valor, "categoria", "Hamburguesas", "direccion", "Manuel Montt 820, Providencia"), headers);
     }
 
     @Given("el servicio {string} está disponible")
