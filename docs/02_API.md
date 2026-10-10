@@ -1,48 +1,41 @@
-# Restaurante — Contrato de la API REST
+# API REST: restaurantes
 
-## Base
+Base local: http://localhost:8082/api. Swagger UI: http://localhost:8082/swagger-ui/index.html.
 
-- **Base path**: `/api/restaurantes`
-- **Formato**: JSON — **Puerto**: 8082 (configurable con `PORT`)
+| Método | Ruta | HTTP de éxito |
+|---|---|---:|
+| POST | /restaurantes | 201 |
+| GET | /restaurantes | 200 |
+| GET | /restaurantes/{id} | 200 |
+| PUT | /restaurantes/{id} | 200 |
+| DELETE | /restaurantes/{id} | 204 |
+| POST | /restaurantes/{id}/menu-items | 201 |
+| GET | /restaurantes/{id}/menu-items | 200 |
+| GET | /menu-items/{id} | 200 |
+| PUT | /menu-items/{id} | 200 |
+| DELETE | /menu-items/{id} | 204 |
 
-## Recursos
+## Crear entidad principal
 
-| Método | Ruta | Códigos de estado | Descripción |
-|--------|------|-------------------|-------------|
-| GET | `/api/restaurantes` | 200 | Lista todos los recursos |
-| GET | `/api/restaurantes/{id}` | 200 / 404 | Obtiene un recurso por id |
-| POST | `/api/restaurantes` | 201 / 400 | Crea un recurso |
-| PUT | `/api/restaurantes/{id}` | 200 / 404 / 400 | Actualiza un recurso |
-| DELETE | `/api/restaurantes/{id}` | 204 / 404 | Elimina un recurso |
-
-## Atributos de un recurso
-
-| Campo | Tipo | Obligatorio | Descripción |
-|-------|------|-------------|-------------|
-| id | Long | - | Identificador autogenerado |
-| nombre | String | Sí | Campo principal del recurso |
-| categoria | String | No | Campo del dominio |
-| direccion | String | No | Campo del dominio |
-
-## Ejemplos con curl
-
-```bash
-# Listar
-curl http://localhost:8082/api/restaurantes
-
-# Crear
-curl -X POST http://localhost:8082/api/restaurantes \
-  -H "Content-Type: application/json" \
-  -d '{"nombre":"Demo"}'
-
-# Obtener por id
-curl http://localhost:8082/api/restaurantes/1
-
-# Actualizar
-curl -X PUT http://localhost:8082/api/restaurantes/1 \
-  -H "Content-Type: application/json" \
-  -d '{"nombre":"Actualizado"}'
-
-# Eliminar
-curl -X DELETE http://localhost:8082/api/restaurantes/1
+```json
+{
+  "nombre": "La Cocina de Barrio",
+  "categoria": "Hamburguesas",
+  "direccion": "Manuel Montt 820, Providencia"
+}
 ```
+
+## Crear entidad relacionada
+
+```json
+{
+  "nombre": "Hamburguesa de vacuno con papas",
+  "descripcion": "Pan brioche, vacuno, queso, tomate y papas rústicas.",
+  "precio": 9990,
+  "disponible": true
+}
+```
+
+Usar el ID retornado por la creación del padre. Los ID son generados por la BD. Editar los hijos mediante sus propias rutas. Ver las reglas y los campos calculados en REGLAS_EP02.md.
+
+Errores: 400 para datos o JSON inválidos; 404 para recurso/relación local inexistente; 409 para conflictos de integridad o unicidad cuando corresponda. Un campo demasiado largo devuelve 400. Los mensajes y validationErrors se entregan mediante ApiExceptionHandler.
